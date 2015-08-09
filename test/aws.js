@@ -1,5 +1,5 @@
 var should = require('should');
-var AWS = require('../mocks/aws');
+var AWS = require('../lib/aws');
 
 describe('mock', function() {
   it('should substitute an EC2 method with a version that returns the given data', function(done) {
