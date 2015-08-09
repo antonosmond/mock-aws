@@ -1,0 +1,36 @@
+{
+  "name": "mock-aws",
+  "version": "0.0.1",
+  "description": "Mock aws-sdk API methods to enable easier testing of apps which use the AWS SDK for JavaScript",
+  "main": "./mocks/aws.js",
+  "scripts": {
+    "test": "mocha -R spec --recursive"
+  },
+  "author": "Anton Osmond <antonosmond@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1.44",
+    "sinon": "^1.15.4"
+  },
+  "devDependencies": {
+    "mocha": "^2.2.5",
+    "should": "^7.0.2"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antonosmond/mock-aws.git"
+  },
+  "keywords": [
+    "aws",
+    "mock",
+    "aws-sdk",
+    "sdk"
+  ],
+  "bugs": {
+    "url": "https://github.com/antonosmond/mock-aws/issues"
+  },
+  "homepage": "https://github.com/antonosmond/mock-aws#readme"
+}
