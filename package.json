@@ -1,6 +1,6 @@
 {
   "name": "mock-aws",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Mock aws-sdk API methods to enable easier testing of apps which use the AWS SDK for JavaScript",
   "main": "./lib/mock-aws.js",
   "scripts": {
