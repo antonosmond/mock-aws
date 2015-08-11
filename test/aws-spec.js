@@ -16,7 +16,7 @@ describe('mock-aws', function() {
       var r53_two = new AWS.Route53();
       r53_one.should.equal(r53_two);
     });
-    it('should allow multiple methods to mocked', function(done) {
+    it('should allow multiple methods & services to mocked', function(done) {
       AWS.mock('EC2', 'describeTags', 'test');
       var ec2 = new AWS.EC2({ region: 'us-east-1' });
       ec2.describeTags({}, function(err, data) {
@@ -32,6 +32,20 @@ describe('mock-aws', function() {
           ec2.describeVpcs({}, function(err, data) {
             (err === null).should.eql(false);
           });
+          done();
+        });
+      });
+    });
+    it('should allow a method to be re-mocked with new test data', function(done) {
+      AWS.mock('EC2', 'describeTags', 'test one');
+      var ec2 = new AWS.EC2({ region: 'us-east-1' });
+      ec2.describeTags({}, function(err, data) {
+        (err === null).should.eql(true);
+        data.should.eql('test one');
+        AWS.mock('EC2', 'describeTags', 'test two');
+        ec2.describeTags({}, function(err, data) {
+          (err === null).should.eql(true);
+          data.should.eql('test two');
           done();
         });
       });
