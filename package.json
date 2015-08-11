@@ -1,7 +1,7 @@
 {
   "name": "mock-aws",
   "version": "1.0.0",
-  "description": "Mock aws-sdk API methods to enable easier testing of apps which use the AWS SDK for JavaScript",
+  "description": "Easily mock aws-sdk API methods to enable easier testing of applications which use the AWS SDK for JavaScript",
   "main": "./lib/mock-aws.js",
   "scripts": {
     "test": "mocha -R spec --recursive"

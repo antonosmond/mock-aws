@@ -89,7 +89,7 @@ Now I can write my test, mocking getNamelessVolumes() to return my test data
 ```js
 var should = require('should');
 var AWS = require('mock-aws'); // include mock-aws instead of aws-sdk
-var tagValidator = require('./tag-validator');
+var tagValidator = require('../lib/tag-validator');
 
 describe('tag-validator', function() {
   describe('getNamelessVolumes()', function() {

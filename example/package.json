@@ -1,0 +1,19 @@
+{
+  "name": "mock-aws-example",
+  "version": "0.0.0",
+  "description": "Example app using mock-aws",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -R spec --recursive"
+  },
+  "author": "Anton Osmond <antonosmond@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1.44"
+  },
+  "devDependencies": {
+    "mocha": "^2.2.5",
+    "mock-aws": "^1.0.0",
+    "should": "^7.0.3"
+  }
+}
