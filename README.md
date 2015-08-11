@@ -1,5 +1,7 @@
-# mock-aws [![Build Status](https://travis-ci.org/antonosmond/mock-aws.svg?branch=master)](https://travis-ci.org/antonosmond/mock-aws)
+# mock-aws
 Easily mock aws-sdk API methods to enable easier testing of applications which use the [AWS SDK for JavaScript](http://www.npmjs.com/package/aws-sdk).
+
+[![Build Status](https://travis-ci.org/antonosmond/mock-aws.svg?branch=master)](https://travis-ci.org/antonosmond/mock-aws)
 
 Under the covers, this stubs aws-sdk methods using [sinon.js](http://sinonjs.org/).
 
