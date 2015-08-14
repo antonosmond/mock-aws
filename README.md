@@ -3,23 +3,128 @@ Easily mock aws-sdk API methods to enable easier testing of applications which u
 
 [![Build Status](https://travis-ci.org/antonosmond/mock-aws.svg?branch=master)](https://travis-ci.org/antonosmond/mock-aws)
 
-Under the covers, this stubs aws-sdk methods using [sinon.js](http://sinonjs.org/).
+Under the hood, this stubs aws-sdk methods using [sinon.js](http://sinonjs.org/).
 
-**IMPORTANT: In order to prevent real AWS endpoints from being hit by mistake, the AWS credentials are nullified causing any non-mocked methods to fail.**
+### API
 
-#### Usage
+* AWS.mock(service, method, data)
+* AWS.restore(service, method)
+* AWS.restore(service)
+* AWS.restore()
+
+
+#### AWS.mock(service, method, data)
+Mocks an AWS service method to return the specified test data
+##### Arguments
+- **service (string):** the name of the AWS service that the method belongs to e.g. EC2, Route53 etc.
+- **method (string):** the service's method to be be mocked e.g. describeTags
+- **data (object):** the test data that the mocked method should return
+
+```js
+var AWS = require('mock-aws');
+var ec2 = new AWS.EC2();
+
+AWS.mock('EC2', 'describeTags', [ 'one', 'two', 'three' ]);
+ec2.describeTags({}, function(err, data) {
+  console.log(data); // data should equal [ 'one', 'two', 'three' ];
+});
+```
+
+
+#### AWS.restore(service, method)
+Removes mocked service method to restore the original functionality
+##### Arguments
+- **service (string):** the name of the AWS service that the method belongs to e.g. EC2, Route53 etc.
+- **method (string):** the service's method to be be restored e.g. describeTags
+
 ```js
 var AWS = require('mock-aws');
 
-// Call AWS.mock(service, method, testData) to mock an aws-sdk method to return the data you specify
+// Mock some EC2 methods to return specified test data
 AWS.mock('EC2', 'describeTags', [ 'one', 'two', 'three' ]);
+var ec2 = new AWS.EC2();
 
-var ec2 = new AWS.EC2({ region: 'us-east-1' }); // this returns the mock EC2 client
-
+// EC2 methods should return specified test data
 ec2.describeTags({}, function(err, data) {
-  console.log(data) // data should equal [ 'one', 'two', 'three' ];
+  console.log(data); // data should equal [ 'one', 'two', 'three' ];
+});
+
+// Call restore with a service & method
+AWS.restore('EC2', 'describeTags');
+
+// describeTags method now returns real AWS data
+ec2.describeTags({}, function(err, data) {
+  console.log(data); // data should equal real data from AWS
 });
 ```
+
+#### AWS.restore(service)
+Removes ALL mocked methods for given service to restore the original functionality
+##### Arguments
+- **service:** (string) the name of the AWS service to restore e.g. EC2, Route53 etc.
+
+```js
+var AWS = require('mock-aws');
+var ec2 = new AWS.EC2();
+
+AWS.mock('EC2', 'describeTags', [ 'one', 'two', 'three' ]);
+AWS.mock('EC2', 'describeVpcs', 'vpcs');
+ec2.describeTags({}, function(err, data) {
+  console.log(data); // data should equal [ 'one', 'two', 'three' ];
+});
+ec2.describeVpcs({}, function(err, data) {
+  console.log(data); // data should equal 'vpcs';
+});
+
+AWS.restore('EC2');
+ec2.describeTags({}, function(err, data) {
+  console.log(data); // data should be real data from AWS
+});
+ec2.describeVpcs({}, function(err, data) {
+  console.log(data); // data should be real data from AWS
+});
+```
+
+#### AWS.restore()
+Removes ALL mocked services & methods to restore the original functionality
+
+```js
+var AWS = require('mock-aws');
+
+var ec2 = new AWS.EC2();
+var s3 = new AWS.S3();
+
+AWS.mock('EC2', 'describeTags', [ 'one', 'two', 'three' ]);
+AWS.mock('EC2', 'describeVpcs', 'vpcs');
+
+AWS.mock('S3', 'listBuckets', { buckets: [] });
+
+ec2.describeTags({}, function(err, data) {
+  console.log(data); // data should equal [ 'one', 'two', 'three' ];
+});
+ec2.describeVpcs({}, function(err, data) {
+  console.log(data); // data should equal 'vpcs';
+});
+
+s3.listBuckets({}, function(err, data) {
+  console.log(data); // data should equal { buckets: [] };
+})
+
+
+AWS.restore('EC2');
+ec2.describeTags({}, function(err, data) {
+  console.log(data); // data should be real data from AWS
+});
+ec2.describeVpcs({}, function(err, data) {
+  console.log(data); // data should be real data from AWS
+});
+s3.listBuckets({}, function(err, data) {
+  console.log(data); // data should equal { buckets: [] };
+})
+```
+
+#### Usage
+
 
 #### Example
 I want to build and test a tag validator that returns the id's of any EBS volumes which don't have a tag called 'name'.
