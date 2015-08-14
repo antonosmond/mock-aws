@@ -26,7 +26,7 @@ describe('When a method is mocked', function() {
       });
     });
   });
-  it('unmocked methods should work as normal', function(done) {
+  it.skip('unmocked methods should work as normal', function(done) {
     AWS.mock('EC2', 'describeTags', 'test');
     var ec2 = new AWS.EC2({ region: 'us-east-1' });
     ec2.describeVpcs({}, function(err, data) {
