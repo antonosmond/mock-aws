@@ -7,10 +7,10 @@ Under the hood, this stubs aws-sdk methods using [sinon.js](http://sinonjs.org/)
 
 ### API
 
-* AWS.mock(service, method, data)
-* AWS.restore(service, method)
-* AWS.restore(service)
-* AWS.restore()
+* [AWS.mock(service, method, data)](#awsmockservice-method-data)
+* [AWS.restore(service, method)](#awsrestoreservice-method)
+* [AWS.restore(service)](#awsrestoreservice)
+* [AWS.restore()](#awsrestore)
 
 
 #### AWS.mock(service, method, data)
@@ -122,8 +122,6 @@ s3.listBuckets({}, function(err, data) {
   console.log(data); // data should equal { buckets: [] };
 })
 ```
-
-#### Usage
 
 
 #### Example
