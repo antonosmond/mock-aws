@@ -9,10 +9,10 @@
   "author": "Anton Osmond <antonosmond@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.1.44",
     "sinon": "^1.15.4"
   },
   "devDependencies": {
+    "aws-sdk": "^2.1.45",
     "mocha": "^2.2.5",
     "should": "^7.0.2"
   },
