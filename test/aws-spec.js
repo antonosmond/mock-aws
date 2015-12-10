@@ -1,3 +1,5 @@
+/*jslint node:true */
+/*global describe, it, beforeEach */
 var should = require('should');
 var AWS = require('../lib/mock-aws');
 
@@ -6,32 +8,48 @@ beforeEach(function() {
 });
 
 describe('When a method is mocked', function() {
-  describe('before the service client has been constructed', function() {
-    it('it should return the mock data when called', function(done) {
+  describe('fixed data', function(){
+    describe('before the service client has been constructed', function() {
+      it('it should return the mock data when called', function(done) {
+        AWS.mock('EC2', 'describeTags', 'test');
+        var ec2 = new AWS.EC2();
+        ec2.describeTags({}, function(err, data) {
+          data.should.eql('test');
+          done();
+        });
+      });
+    });
+    describe('after the service client has been constructed', function() {
+      it('it should return the mock data when called', function(done) {
+        var ec2 = new AWS.EC2();
+        AWS.mock('EC2', 'describeTags', 'test');
+        ec2.describeTags({}, function(err, data) {
+          data.should.eql('test');
+          done();
+        });
+      });
+    });
+    it.skip('unmocked methods should work as normal', function(done) {
       AWS.mock('EC2', 'describeTags', 'test');
-      var ec2 = new AWS.EC2();
-      ec2.describeTags({}, function(err, data) {
-        data.should.eql('test');
+      var ec2 = new AWS.EC2({ region: 'us-east-1' });
+      ec2.describeVpcs({}, function(err, data) {
+        data.should.have.property('Vpcs');
         done();
       });
     });
   });
-  describe('after the service client has been constructed', function() {
-    it('it should return the mock data when called', function(done) {
+  describe('functions', function(){
+    it('should return the mock data when called', function(done){
+      var expected;
+      AWS.mock('EC2', 'describeTags', function (options,cb) {
+        expected = Math.floor((Math.random() * 1000) + 1);
+        cb(null,expected);
+      });
       var ec2 = new AWS.EC2();
-      AWS.mock('EC2', 'describeTags', 'test');
       ec2.describeTags({}, function(err, data) {
-        data.should.eql('test');
+        data.should.eql(expected);
         done();
       });
-    });
-  });
-  it.skip('unmocked methods should work as normal', function(done) {
-    AWS.mock('EC2', 'describeTags', 'test');
-    var ec2 = new AWS.EC2({ region: 'us-east-1' });
-    ec2.describeVpcs({}, function(err, data) {
-      data.should.have.property('Vpcs');
-      done();
     });
   });
 });
