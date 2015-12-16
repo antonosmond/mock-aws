@@ -14,11 +14,17 @@ Under the hood, this stubs aws-sdk methods using [sinon.js](http://sinonjs.org/)
 
 
 #### AWS.mock(service, method, data)
-Mocks an AWS service method to return the specified test data
+Mocks an AWS service method to return the specified test data or a function
 ##### Arguments
 - **service (string):** the name of the AWS service that the method belongs to e.g. EC2, Route53 etc.
 - **method (string):** the service's method to be be mocked e.g. describeTags
-- **data (object):** the test data that the mocked method should return
+- **data (object):** the test data that the mocked method should return or a function that is called
+
+The parameter `data` can be either fixed data, in which case the original callback will be called with that data, or it can be a function. If it is a function, then when the mocked service is called, your function will be called. 
+
+If it is a function, it will be passed all of the parameters passed to the original AWS SDK call, including the callback. **You are expected to call the callback.**
+
+Example of fixed data:
 
 ```js
 var AWS = require('mock-aws');
@@ -27,6 +33,36 @@ var ec2 = new AWS.EC2();
 AWS.mock('EC2', 'describeTags', [ 'one', 'two', 'three' ]);
 ec2.describeTags({}, function(err, data) {
   console.log(data); // data should equal [ 'one', 'two', 'three' ];
+});
+```
+
+Example of function:
+
+```js
+var AWS = require('mock-aws');
+var ec2 = new AWS.EC2();
+
+AWS.mock('EC2', 'describeTags', function(params,callback){
+  params = params || {};
+  if (params.special) {
+    callback(null,"special");
+  } else if (params.strange) {
+    callback(null,"weird");
+  } else {
+    callback("ERROR!");
+  }
+});
+ec2.describeTags({}, function(err, data) {
+  console.log(err);  // err should equal "ERROR!"
+  console.log(data); // data should be undefined
+});
+ec2.describeTags({special: true}, function(err, data) {
+  console.log(err);  // err should be null
+  console.log(data); // data should be "special"
+});
+ec2.describeTags({strange:true}, function(err, data) {
+  console.log(err);  // err should be null
+  console.log(data); // data should be "weird"
 });
 ```
 
